@@ -33,9 +33,6 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 * Báo cáo thống kê
 * Nhật ký hoạt động
 
-## Tài liệu Thiết kế UI/UX
-* **Link xem thiết kế Figma:
-
 ## Hướng dẫn cài đặt
 
 Xem file installation-guide.md

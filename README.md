@@ -34,7 +34,7 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 * Nhật ký hoạt động
 
 ## Tài liệu Thiết kế UI/UX
-* **Link xem thiết kế Figma:https://www.figma.com/community/file/1651250502467876238/language-center-management-app
+* **Link xem thiết kế Figma:
 
 ## Hướng dẫn cài đặt
 

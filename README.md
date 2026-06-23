@@ -13,7 +13,7 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 | 1   | ...    | Backend Developer & DBA |
 | 2   | ...    | Scrum Master & QA       |
 | 3   | ...    | Product Owner & BA      |
-| 4   | ...    | UI/UX & Frontend        |
+| 4   | Pham Dinh Gia Bao   | UI/UX & Frontend        |
 | 5   | ...    | DevOps & Documentation  |
 
 ## Công nghệ sử dụng
@@ -32,6 +32,9 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 * Quản lý kho
 * Báo cáo thống kê
 * Nhật ký hoạt động
+
+## Tài liệu Thiết kế UI/UX
+* **Link xem thiết kế Figma:https://www.figma.com/community/file/1651250502467876238/language-center-management-app
 
 ## Hướng dẫn cài đặt
 

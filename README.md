@@ -36,3 +36,5 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 ## Hướng dẫn cài đặt
 
 Xem file installation-guide.md
+
+LCAM-11

@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface AssetRepository extends JpaRepository<Asset, Integer> {
     Optional<Asset> findByAssetCode(String assetCode);
+    Optional<Asset> findByBarcode(String barcode);
+    List<Asset> findByAvailableQuantityGreaterThan(Integer quantity);
     boolean existsByAssetCode(String assetCode);
     List<Asset> findByStatus(String status);
     List<Asset> findByCategory(String category);

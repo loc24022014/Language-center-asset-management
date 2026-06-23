@@ -227,4 +227,5 @@ GO
 PRINT N'=== LangCenterAssetDB Schema created successfully! ===';
 GO
 - -   A s s e t s   a n d   C a t e g o r i e s  
+ - -   B o r r o w _ R e c o r d s   a n d   T r i g g e r s  
  

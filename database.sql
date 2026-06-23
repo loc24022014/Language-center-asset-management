@@ -226,3 +226,5 @@ GO
 
 PRINT N'=== LangCenterAssetDB Schema created successfully! ===';
 GO
+- -   A s s e t s   a n d   C a t e g o r i e s  
+ 

@@ -35,14 +35,18 @@ public class Asset {
     @Column(name = "available_quantity", nullable = false)
     private Integer availableQuantity;
 
+    @Column(name = "barcode", unique = true, length = 100)
+    private String barcode;
+
+    @Column(name = "status", length = 50)
+    private String status;
+
     @Column(length = 50)
     private String unit;
 
     @Column(length = 200)
     private String location;
 
-    @Column(nullable = false, length = 50)
-    private String status = "ACTIVE";
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")

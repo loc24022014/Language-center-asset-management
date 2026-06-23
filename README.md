@@ -13,7 +13,7 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 | 1   | ...    | Backend Developer & DBA |
 | 2   | ...    | Scrum Master & QA       |
 | 3   | ...    | Product Owner & BA      |
-| 4   | Pham Dinh Gia Bao   | UI/UX & Frontend        |
+| 4   | ...    | UI/UX & Frontend        |
 | 5   | ...    | DevOps & Documentation  |
 
 ## Công nghệ sử dụng
@@ -36,5 +36,3 @@ Hệ thống hỗ trợ quản lý tài sản và kho vật tư tại trung tâm
 ## Hướng dẫn cài đặt
 
 Xem file installation-guide.md
-
-N16

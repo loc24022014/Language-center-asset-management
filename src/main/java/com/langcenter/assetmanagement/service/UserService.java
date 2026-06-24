@@ -55,8 +55,8 @@ public class UserService {
             throw new IllegalArgumentException("Email đã được sử dụng: " + request.getEmail());
         }
 
-        Role role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Role ID: " + request.getRoleId()));
+        Role role = roleRepository.findByName(request.getRoleName())
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Role: " + request.getRoleName()));
 
         User user = User.builder()
                 .username(request.getUsername())
@@ -97,11 +97,11 @@ public class UserService {
 
     // ── UPDATE ROLE ────────────────────────────────────────
     @Transactional
-    public UserResponse updateUserRole(Integer id, Integer roleId) {
+    public UserResponse updateUserRole(Integer id, String roleName) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Không tìm thấy user ID: " + id));
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Role ID: " + roleId));
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Role: " + roleName));
         user.setRole(role);
         return toResponse(userRepository.save(user));
     }

@@ -21,42 +21,33 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if (roleRepository.count() == 0) {
-            roleRepository.save(Role.builder().name("ADMIN").build());
-            roleRepository.save(Role.builder().name("MANAGER").build());
-            roleRepository.save(Role.builder().name("TEACHER").build());
-            roleRepository.save(Role.builder().name("STAFF").build());
+        // Create Roles if missing
+        createRoleIfNotFound("ADMIN");
+        createRoleIfNotFound("MANAGER");
+        createRoleIfNotFound("TEACHER");
+        createRoleIfNotFound("STAFF");
+
+        // Create Users if missing
+        createUserIfNotFound("admin", "admin123", "Administrator", "admin@langcenter.edu.vn", "ADMIN");
+        createUserIfNotFound("manager", "manager123", "Quản lý trung tâm", "manager@langcenter.edu.vn", "MANAGER");
+        createUserIfNotFound("teacher1", "teacher123", "Giáo viên 1", "teacher1@langcenter.edu.vn", "TEACHER");
+    }
+
+    private void createRoleIfNotFound(String roleName) {
+        if (roleRepository.findByName(roleName).isEmpty()) {
+            roleRepository.save(Role.builder().name(roleName).build());
         }
+    }
 
-        if (userRepository.count() == 0) {
-            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
-            Role managerRole = roleRepository.findByName("MANAGER").orElseThrow();
-            Role teacherRole = roleRepository.findByName("TEACHER").orElseThrow();
-
+    private void createUserIfNotFound(String username, String password, String fullName, String email, String roleName) {
+        if (userRepository.findByUsername(username).isEmpty()) {
+            Role role = roleRepository.findByName(roleName).orElseThrow();
             userRepository.save(User.builder()
-                    .username("admin")
-                    .password(passwordEncoder.encode("admin123"))
-                    .fullName("Administrator")
-                    .email("admin@langcenter.edu.vn")
-                    .role(adminRole)
-                    .isActive(true)
-                    .build());
-
-            userRepository.save(User.builder()
-                    .username("manager")
-                    .password(passwordEncoder.encode("manager123"))
-                    .fullName("Quản lý trung tâm")
-                    .email("manager@langcenter.edu.vn")
-                    .role(managerRole)
-                    .isActive(true)
-                    .build());
-
-            userRepository.save(User.builder()
-                    .username("teacher1")
-                    .password(passwordEncoder.encode("teacher123"))
-                    .fullName("Giáo viên 1")
-                    .email("teacher1@langcenter.edu.vn")
-                    .role(teacherRole)
+                    .username(username)
+                    .password(passwordEncoder.encode(password))
+                    .fullName(fullName)
+                    .email(email)
+                    .role(role)
                     .isActive(true)
                     .build());
         }

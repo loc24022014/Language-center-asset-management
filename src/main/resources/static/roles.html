@@ -194,10 +194,11 @@
                 </div>
                 <div class="form-group" style="margin-top: 16px;">
                     <label>Role</label>
-                    <select id="roleId" class="form-control" required>
-                        <option value="1">ADMIN</option>
-                        <option value="2">MANAGER</option>
-                        <option value="3">STAFF</option>
+                    <select id="roleName" class="form-control" required>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="MANAGER">MANAGER</option>
+                        <option value="TEACHER">TEACHER</option>
+                        <option value="STAFF">STAFF</option>
                     </select>
                 </div>
                 <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
@@ -276,9 +277,10 @@
                     <td style="color: var(--text-muted);">${user.email || 'N/A'}</td>
                     <td>
                         <select class="role-select" onchange="updateUserRole(${user.id}, this.value)">
-                            <option value="1" ${user.roleName === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
-                            <option value="2" ${user.roleName === 'MANAGER' ? 'selected' : ''}>MANAGER</option>
-                            <option value="3" ${user.roleName === 'STAFF' ? 'selected' : ''}>STAFF</option>
+                            <option value="ADMIN" ${user.roleName === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
+                            <option value="MANAGER" ${user.roleName === 'MANAGER' ? 'selected' : ''}>MANAGER</option>
+                            <option value="TEACHER" ${user.roleName === 'TEACHER' ? 'selected' : ''}>TEACHER</option>
+                            <option value="STAFF" ${user.roleName === 'STAFF' ? 'selected' : ''}>STAFF</option>
                         </select>
                     </td>
                     <td>${statusBadge}</td>
@@ -307,9 +309,9 @@
         }
 
         // --- Update Role ---
-        async function updateUserRole(id, roleId) {
+        async function updateUserRole(id, roleName) {
             try {
-                const response = await ApiClient.fetch(`/users/${id}/role?roleId=${roleId}`, { method: 'PUT' });
+                const response = await ApiClient.fetch(`/users/${id}/role?roleName=${roleName}`, { method: 'PUT' });
                 if (response.ok) {
                     showToast('Cập nhật chức vụ thành công', 'success');
                     loadUsers();
@@ -345,7 +347,7 @@
                 password: document.getElementById('password').value,
                 fullName: document.getElementById('fullName').value,
                 email: document.getElementById('email').value,
-                roleId: parseInt(document.getElementById('roleId').value)
+                roleName: document.getElementById('roleName').value
             };
 
             try {

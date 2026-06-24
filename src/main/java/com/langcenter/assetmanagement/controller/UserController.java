@@ -47,7 +47,7 @@ public class UserController {
     @PutMapping("/{id}/role")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cập nhật quyền (Role) cho tài khoản")
-    public ResponseEntity<UserResponse> updateRole(@PathVariable Integer id, @RequestParam Integer roleId) {
-        return ResponseEntity.ok(userService.updateUserRole(id, roleId));
+    public ResponseEntity<UserResponse> updateRole(@PathVariable Integer id, @RequestParam String roleName) {
+        return ResponseEntity.ok(userService.updateUserRole(id, roleName));
     }
 }

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - EduAsset</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .toolbar-left {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .action-btn.reject:hover {
+            background-color: var(--status-broken-bg);
+            color: var(--status-broken-text);
+        }
+
+        .action-btn.approve:hover {
+            background-color: var(--status-active-bg);
+            color: var(--status-active-text);
+        }
+
+        /* Status Badge Colors */
+        .badge-PENDING { background-color: #fef3c7; color: #d97706; }
+        .badge-APPROVED { background-color: #d1fae5; color: #059669; }
+        .badge-REJECTED { background-color: #fee2e2; color: #dc2626; }
+        .badge-COMPLETED { background-color: #e0e7ff; color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            EduAsset
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html">
+                    <i data-lucide="home" class="nav-icon"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="assets.html">
+                    <i data-lucide="box" class="nav-icon"></i>
+                    Assets
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="transactions.html">
+                    <i data-lucide="arrow-left-right" class="nav-icon"></i>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item require-admin">
+                <a href="roles.html">
+                    <i data-lucide="users" class="nav-icon"></i>
+                    Roles & Permissions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reports.html">
+                    <i data-lucide="bar-chart-2" class="nav-icon"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header class="header">
+            <h1 class="page-title">Borrow & Return</h1>
+            <div class="header-actions">
+                <!-- Dropdowns will be injected here by api.js -->
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="input-group" style="flex: 2;">
+                        <i data-lucide="search" class="input-icon" style="width: 18px;"></i>
+                        <input type="text" class="form-control" placeholder="Search by Code or Asset...">
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="borrowBtn">
+                    <i data-lucide="arrow-right-circle" style="width: 18px;"></i>
+                    Request Borrow
+                </button>
+            </div>
+
+            <div class="card" style="padding: 0;">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TRANS. CODE</th>
+                                <th>ASSET</th>
+                                <th>USER / TYPE</th>
+                                <th>DATES</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transTableBody">
+                            <!-- Dynamic rows will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Borrow -->
+    <div class="modal-overlay" id="borrowModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Request to Borrow Asset</h2>
+                <button class="modal-close" onclick="closeModal('borrowModal')">
+                    <i data-lucide="x" style="width: 20px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Select Asset *</label>
+                    <select id="assetSelect" class="form-control" required></select>
+                </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Quantity *</label>
+                        <input type="number" id="borrowQty" class="form-control" value="1" min="1" required>
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Expected Return *</label>
+                        <input type="date" id="expectedReturn" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Note / Purpose</label>
+                    <input type="text" id="borrowNote" class="form-control" placeholder="e.g. Teaching class 10A">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('borrowModal')">Cancel</button>
+                <button class="btn btn-primary" id="saveBorrowBtn">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Return Note -->
+    <div class="modal-overlay" id="returnModal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Return Asset</h2>
+                <button class="modal-close" onclick="closeModal('returnModal')">
+                    <i data-lucide="x" style="width: 20px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Return Note (Condition, Issues)</label>
+                    <input type="text" id="returnNote" class="form-control" placeholder="e.g. Asset works fine">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('returnModal')">Cancel</button>
+                <button class="btn btn-primary" id="saveReturnBtn">Confirm Return</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+            toast.innerHTML = `<i data-lucide="${icon}" style="width: 18px; color: ${type === 'success' ? '#10b981' : '#ef4444'}"></i> ${message}`;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        let currentTrans = [];
+        let returnTransId = null;
+        let isAdminOrManager = false;
+
+        // Fetch Transactions
+        async function loadData() {
+            try {
+                // Check role
+                const role = Auth.getRole();
+                isAdminOrManager = (role === 'ADMIN' || role === 'MANAGER');
+
+                const res = await ApiClient.fetch('/transactions');
+                if (!res || !res.ok) throw new Error('Failed to load transactions');
+                const data = await res.json();
+                currentTrans = data;
+
+                // Sort newest first
+                data.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+                renderTable(data);
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to load data', 'error');
+            }
+        }
+
+        function formatDate(dt) {
+            if(!dt) return '-';
+            return new Date(dt).toLocaleDateString('vi-VN');
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('transTableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(t => {
+                const badgeClass = 'badge-' + t.status;
+                const typeColor = t.transactionType === 'BORROW' ? '#3b82f6' : '#8b5cf6';
+                
+                let datesHTML = `<div style="font-size:12px; color:var(--text-muted)">
+                    Expected: ${formatDate(t.expectedReturn)}
+                </div>`;
+                if(t.transactionType === 'RETURN') {
+                    datesHTML = `<div style="font-size:12px; color:var(--text-muted)">
+                        Actual: ${formatDate(t.actualReturn)}
+                    </div>`;
+                }
+
+                // Action buttons based on Role and Status
+                let actionsHTML = '';
+                if(isAdminOrManager && t.status === 'PENDING') {
+                    if(t.transactionType === 'BORROW') {
+                        actionsHTML = `
+                            <button class="action-btn approve" onclick="processAction(${t.id}, 'approve-borrow')" title="Approve"><i data-lucide="check" style="width: 18px;"></i></button>
+                            <button class="action-btn reject" onclick="processAction(${t.id}, 'reject-borrow')" title="Reject"><i data-lucide="x" style="width: 18px;"></i></button>
+                        `;
+                    } else if(t.transactionType === 'RETURN') {
+                        actionsHTML = `
+                            <button class="action-btn approve" onclick="processAction(${t.id}, 'approve-return')" title="Confirm Return"><i data-lucide="check-square" style="width: 18px;"></i></button>
+                        `;
+                    }
+                }
+
+                // If user is borrower and it's an active borrow, they can return it
+                // For simplicity, we allow returning if status is APPROVED and type is BORROW
+                if(t.status === 'APPROVED' && t.transactionType === 'BORROW') {
+                    actionsHTML += `
+                        <button class="btn btn-outline" style="padding:4px 8px; font-size:12px; color:#5c4dff; border:1px solid #5c4dff" onclick="openReturnModal(${t.id})">
+                            Return
+                        </button>
+                    `;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 600; font-size: 13px;">${t.transactionCode}</td>
+                    <td>
+                        <div style="font-weight:500">${t.assetName}</div>
+                        <div style="font-size:12px; color:var(--text-muted)">${t.assetCode} (Qty: ${t.quantity})</div>
+                    </td>
+                    <td>
+                        <div>${t.username}</div>
+                        <div style="font-size:12px; font-weight:600; color:${typeColor}">${t.transactionType}</div>
+                    </td>
+                    <td>${datesHTML}</td>
+                    <td><span class="badge ${badgeClass}">${t.status}</span></td>
+                    <td><div class="action-btns">${actionsHTML}</div></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // Process Approve/Reject
+        async function processAction(id, action) {
+            let url = '';
+            if(action === 'approve-borrow') url = `/transactions/${id}/approve`;
+            if(action === 'reject-borrow') url = `/transactions/${id}/reject`;
+            if(action === 'approve-return') url = `/transactions/return/${id}/approve`;
+
+            try {
+                const res = await ApiClient.fetch(url, { method: 'PUT' });
+                if(res.ok) {
+                    showToast('Action processed successfully!', 'success');
+                    loadData();
+                } else {
+                    const err = await res.json();
+                    showToast(err.message || 'Error processing action', 'error');
+                }
+            } catch(e) {
+                showToast('Error connecting to server', 'error');
+            }
+        }
+
+        // Modal Utilities
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // --- BORROW MODAL LOGIC ---
+        document.getElementById('borrowBtn').addEventListener('click', async () => {
+            // Load available assets
+            try {
+                const res = await ApiClient.fetch('/assets');
+                const assets = await res.json();
+                const sel = document.getElementById('assetSelect');
+                sel.innerHTML = '<option value="">-- Choose Asset --</option>';
+                assets.forEach(a => {
+                    if(a.availableQuantity > 0) {
+                        sel.innerHTML += `<option value="${a.id}">${a.name} (${a.assetCode}) - Avail: ${a.availableQuantity}</option>`;
+                    }
+                });
+                
+                // Clear form
+                document.getElementById('borrowQty').value = '1';
+                document.getElementById('expectedReturn').value = '';
+                document.getElementById('borrowNote').value = '';
+                
+                openModal('borrowModal');
+            } catch(e) {
+                showToast('Cannot load assets', 'error');
+            }
+        });
+
+        document.getElementById('saveBorrowBtn').addEventListener('click', async () => {
+            const data = {
+                assetId: parseInt(document.getElementById('assetSelect').value),
+                quantity: parseInt(document.getElementById('borrowQty').value),
+                expectedReturn: document.getElementById('expectedReturn').value + "T00:00:00",
+                note: document.getElementById('borrowNote').value
+            };
+
+            if(!data.assetId || !document.getElementById('expectedReturn').value) {
+                showToast('Please fill required fields', 'error');
+                return;
+            }
+
+            try {
+                const res = await ApiClient.fetch('/transactions/borrow', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                if(res.ok) {
+                    showToast('Borrow request submitted!', 'success');
+                    closeModal('borrowModal');
+                    loadData();
+                } else {
+                    const err = await res.json();
+                    showToast(err.message || 'Error submitting request', 'error');
+                }
+            } catch(e) {
+                showToast('Network error', 'error');
+            }
+        });
+
+        // --- RETURN MODAL LOGIC ---
+        window.openReturnModal = function(id) {
+            returnTransId = id;
+            document.getElementById('returnNote').value = '';
+            openModal('returnModal');
+        };
+
+        document.getElementById('saveReturnBtn').addEventListener('click', async () => {
+            const data = { note: document.getElementById('returnNote').value };
+            try {
+                const res = await ApiClient.fetch(`/transactions/${returnTransId}/return`, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                if(res.ok) {
+                    showToast('Return request submitted!', 'success');
+                    closeModal('returnModal');
+                    loadData();
+                } else {
+                    const err = await res.json();
+                    showToast(err.message || 'Error submitting return', 'error');
+                }
+            } catch(e) {
+                showToast('Network error', 'error');
+            }
+        });
+
+        // Init
+        loadData();
+    </script>
+</body>
+</html>

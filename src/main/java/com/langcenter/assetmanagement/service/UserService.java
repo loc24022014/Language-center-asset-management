@@ -95,6 +95,17 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
+    // ── UPDATE ROLE ────────────────────────────────────────
+    @Transactional
+    public UserResponse updateUserRole(Integer id, Integer roleId) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy user ID: " + id));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy Role ID: " + roleId));
+        user.setRole(role);
+        return toResponse(userRepository.save(user));
+    }
+
     // ── MAPPER ─────────────────────────────────────────────
     private UserResponse toResponse(User user) {
         return UserResponse.builder()

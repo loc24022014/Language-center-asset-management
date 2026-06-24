@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - EduAsset</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .report-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .report-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .custom-checkbox input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            background-color: transparent;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .custom-checkbox input:checked + .checkmark {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .custom-checkbox input:checked + .checkmark::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-row .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 12px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            EduAsset
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html">
+                    <i data-lucide="home" class="nav-icon"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="assets.html">
+                    <i data-lucide="box" class="nav-icon"></i>
+                    Assets
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="transactions.html">
+                    <i data-lucide="arrow-left-right" class="nav-icon"></i>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item require-admin">
+                <a href="roles.html">
+                    <i data-lucide="users" class="nav-icon"></i>
+                    Roles & Permissions
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="reports.html">
+                    <i data-lucide="bar-chart-2" class="nav-icon"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header class="header">
+            <h1 class="page-title">Generate Reports</h1>
+            <div class="header-actions">
+                <button class="icon-btn has-notification">
+                    <i data-lucide="bell"></i>
+                </button>
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="card report-form">
+                <h2 class="report-title">Asset Inventory Report</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">From Date</label>
+                        <div class="input-group">
+                            <input type="date" id="fromDate" class="form-control" style="padding-left: 14px; padding-right: 36px;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">To Date</label>
+                        <div class="input-group">
+                            <input type="date" id="toDate" class="form-control" style="padding-left: 14px; padding-right: 36px;">
+                        </div>
+                    </div>
+                </div>
+                <p id="dateError" style="color: #ef4444; font-size: 12px; margin-top: -12px; display: none;">⚠ "From Date" phải nhỏ hơn hoặc bằng "To Date"</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-control">
+                            <option>All Categories</option>
+                            <option>Electronics</option>
+                            <option>Furniture</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Branch Location</label>
+                        <select class="form-control">
+                            <option>All Branches</option>
+                            <option>Center 1</option>
+                            <option>Center 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 24px;">
+                    <label class="form-label">Include Details</label>
+                    <div class="checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                            Asset Cost
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                            Maintenance History
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn btn-primary" id="btnDownloadPdf">
+                        <i data-lucide="file-text" style="width: 18px;"></i>
+                        Download PDF
+                    </button>
+                    <button class="btn btn-success" id="btnExportExcel">
+                        <i data-lucide="file-spreadsheet" style="width: 18px;"></i>
+                        Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+            toast.innerHTML = `<i data-lucide="${icon}" style="width: 18px; color: ${type === 'success' ? '#10b981' : '#ef4444'}"></i> ${message}`;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+            
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        // Validate Dates
+        function validateDates() {
+            const from = document.getElementById('fromDate').value;
+            const to = document.getElementById('toDate').value;
+            const err = document.getElementById('dateError');
+            if (from && to && from > to) {
+                err.style.display = 'block';
+                return false;
+            }
+            err.style.display = 'none';
+            return true;
+        }
+
+        document.getElementById('fromDate').addEventListener('change', validateDates);
+        document.getElementById('toDate').addEventListener('change', validateDates);
+
+        // Utility: Fetch and Download Blob
+        async function downloadReport(url, filename) {
+            if (!validateDates()) {
+                showToast('Vui lòng kiểm tra lại ngày tháng hợp lệ', 'error');
+                return;
+            }
+
+            try {
+                const token = Auth.getToken();
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        showToast('Lỗi xác thực, vui lòng đăng nhập lại', 'error');
+                        Auth.logout();
+                        return;
+                    }
+                    showToast('Lỗi khi tải báo cáo', 'error');
+                    return;
+                }
+
+                // Convert response to Blob
+                const blob = await response.blob();
+                
+                // Create a temporary link to download
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(downloadUrl);
+
+                showToast('Tải xuống thành công!', 'success');
+            } catch (error) {
+                console.error(error);
+                showToast('Lỗi mạng khi tải báo cáo', 'error');
+            }
+        }
+
+        document.getElementById('btnDownloadPdf').addEventListener('click', () => {
+            showToast('Đang tạo PDF...', 'success');
+            downloadReport('/api/reports/pdf', 'assets_report.pdf');
+        });
+
+        document.getElementById('btnExportExcel').addEventListener('click', () => {
+            showToast('Đang xuất Excel...', 'success');
+            downloadReport('/api/reports/excel', 'assets_report.xlsx');
+        });
+    </script>
+</body>
+</html>

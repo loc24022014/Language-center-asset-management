@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles & Permissions - EduAsset</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #e5e7eb;
+            color: var(--text-main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .role-select {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-main);
+            background-color: transparent;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .role-select:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Custom Checkbox */
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .custom-checkbox input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            background-color: transparent;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .custom-checkbox input:checked + .checkmark {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .custom-checkbox input:checked + .checkmark::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        th.text-center, td.text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            EduAsset
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html">
+                    <i data-lucide="home" class="nav-icon"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="assets.html">
+                    <i data-lucide="box" class="nav-icon"></i>
+                    Assets
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="transactions.html">
+                    <i data-lucide="arrow-left-right" class="nav-icon"></i>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item active require-admin">
+                <a href="roles.html">
+                    <i data-lucide="users" class="nav-icon"></i>
+                    Roles & Permissions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reports.html">
+                    <i data-lucide="bar-chart-2" class="nav-icon"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header class="header">
+            <h1 class="page-title">User Accounts</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="openAddUserModal()">
+                    <i data-lucide="plus" style="width: 18px;"></i>
+                    Add New User
+                </button>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="card" style="padding: 0;">
+                <div class="table-wrapper">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>USER INFO</th>
+                                <th>USERNAME</th>
+                                <th>EMAIL</th>
+                                <th>ROLE</th>
+                                <th>STATUS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- Users will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New User</h2>
+                <button class="close-btn" onclick="closeAddUserModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" class="form-control" required minlength="3">
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" required minlength="6">
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" class="form-control" required>
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Email</label>
+                    <input type="email" id="email" class="form-control">
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label>Role</label>
+                    <select id="roleId" class="form-control" required>
+                        <option value="1">ADMIN</option>
+                        <option value="2">MANAGER</option>
+                        <option value="3">STAFF</option>
+                    </select>
+                </div>
+                <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button type="button" class="btn btn-outline" onclick="closeAddUserModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+            toast.innerHTML = `<i data-lucide="${icon}" style="width: 18px; color: ${type === 'success' ? '#10b981' : '#ef4444'}"></i> ${message}`;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        // --- Fetch Users ---
+        async function loadUsers() {
+            try {
+                const response = await ApiClient.fetch('/users');
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        showToast('Bạn không có quyền xem trang này', 'error');
+                        return;
+                    }
+                    throw new Error('Không thể tải danh sách tài khoản');
+                }
+                const users = await response.json();
+                renderUsers(users);
+            } catch (error) {
+                console.error(error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+            
+            users.forEach(user => {
+                const initial = user.fullName ? user.fullName.charAt(0).toUpperCase() : '?';
+                const statusBadge = user.isActive 
+                    ? `<span class="status-badge status-active">Active</span>`
+                    : `<span class="status-badge status-broken" style="background:#fef2f2; color:#ef4444">Locked</span>`;
+                
+                const actionBtn = user.isActive
+                    ? `<button class="btn btn-outline" style="color: #ef4444; border-color: #ef4444;" onclick="toggleUserStatus(${user.id}, false)">
+                         <i data-lucide="lock" style="width:16px;"></i> Lock
+                       </button>`
+                    : `<button class="btn btn-success" onclick="toggleUserStatus(${user.id}, true)">
+                         <i data-lucide="unlock" style="width:16px;"></i> Unlock
+                       </button>`;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${initial}</div>
+                            <span style="font-weight: 500;">${user.fullName}</span>
+                        </div>
+                    </td>
+                    <td>${user.username}</td>
+                    <td style="color: var(--text-muted);">${user.email || 'N/A'}</td>
+                    <td>
+                        <select class="role-select" onchange="updateUserRole(${user.id}, this.value)">
+                            <option value="1" ${user.roleName === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
+                            <option value="2" ${user.roleName === 'MANAGER' ? 'selected' : ''}>MANAGER</option>
+                            <option value="3" ${user.roleName === 'STAFF' ? 'selected' : ''}>STAFF</option>
+                        </select>
+                    </td>
+                    <td>${statusBadge}</td>
+                    <td>${actionBtn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // --- Toggle Status ---
+        async function toggleUserStatus(id, activate) {
+            try {
+                const response = await ApiClient.fetch(`/users/${id}/toggle-active`, { method: 'PUT' });
+                if (response.ok) {
+                    showToast(activate ? 'Đã mở khóa tài khoản' : 'Đã khóa tài khoản', 'success');
+                    loadUsers();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.message || 'Lỗi khi thay đổi trạng thái', 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Lỗi kết nối mạng', 'error');
+            }
+        }
+
+        // --- Update Role ---
+        async function updateUserRole(id, roleId) {
+            try {
+                const response = await ApiClient.fetch(`/users/${id}/role?roleId=${roleId}`, { method: 'PUT' });
+                if (response.ok) {
+                    showToast('Cập nhật chức vụ thành công', 'success');
+                    loadUsers();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.message || 'Lỗi khi cập nhật chức vụ', 'error');
+                    loadUsers(); // reload to reset dropdown
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Lỗi kết nối mạng', 'error');
+                loadUsers();
+            }
+        }
+
+        // --- Modal & Form ---
+        const userModal = document.getElementById('userModal');
+        const userForm = document.getElementById('userForm');
+
+        function openAddUserModal() {
+            userForm.reset();
+            userModal.classList.add('active');
+        }
+
+        function closeAddUserModal() {
+            userModal.classList.remove('active');
+        }
+
+        userForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                roleId: parseInt(document.getElementById('roleId').value)
+            };
+
+            try {
+                const response = await ApiClient.fetch('/users', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    showToast('Tạo tài khoản thành công', 'success');
+                    closeAddUserModal();
+                    loadUsers();
+                } else {
+                    const errorData = await response.json();
+                    showToast(errorData.message || 'Lỗi khi tạo tài khoản', 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Lỗi kết nối mạng', 'error');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+</html>

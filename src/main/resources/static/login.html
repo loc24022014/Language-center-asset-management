@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EduAsset</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: var(--bg-main); 
+        }
+        .login-card { 
+            width: 400px; 
+            padding: 40px; 
+            text-align: center; 
+        }
+        .login-card .logo { 
+            justify-content: center; 
+            margin-bottom: 24px; 
+        }
+        .form-group { 
+            text-align: left; 
+            margin-bottom: 20px; 
+        }
+        .error-msg { 
+            color: #ef4444; 
+            font-size: 13px; 
+            margin-top: 12px; 
+            display: none; 
+            text-align: left;
+            background-color: #fee2e2;
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card login-card">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            EduAsset
+        </div>
+        <h2 style="font-size: 20px; margin-bottom: 32px; color: var(--text-main);">Welcome Back</h2>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Username</label>
+                <input type="text" id="username" class="form-control" style="margin-top: 8px;" value="admin" required>
+            </div>
+            <div class="form-group">
+                <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Password</label>
+                <input type="password" id="password" class="form-control" style="margin-top: 8px;" value="admin123" required>
+            </div>
+            
+            <div id="errorMsg" class="error-msg">
+                <i data-lucide="alert-circle" style="width: 16px; display: inline-block; vertical-align: middle;"></i> 
+                <span style="vertical-align: middle;">Sai tên đăng nhập hoặc mật khẩu</span>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="loginBtn" style="width: 100%; justify-content: center; margin-top: 24px;">
+                Sign In
+            </button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        lucide.createIcons();
+        
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.innerHTML = '<span class="loader"></span> Signing in...';
+            btn.disabled = true;
+            
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            
+            const success = await Auth.login(u, p);
+            if (success) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+                btn.innerHTML = 'Sign In';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

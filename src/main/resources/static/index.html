@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EduAsset</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Dashboard Specific Styles */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 8px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .timeline {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .timeline-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        
+        .dot-green { background-color: #10b981; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-blue { background-color: #3b82f6; }
+        
+        .timeline-content h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        
+        .timeline-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            EduAsset
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active">
+                <a href="index.html">
+                    <i data-lucide="home" class="nav-icon"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="assets.html">
+                    <i data-lucide="box" class="nav-icon"></i>
+                    Assets
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="transactions.html">
+                    <i data-lucide="arrow-left-right" class="nav-icon"></i>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item require-admin">
+                <a href="roles.html">
+                    <i data-lucide="users" class="nav-icon"></i>
+                    Roles & Permissions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reports.html">
+                    <i data-lucide="bar-chart-2" class="nav-icon"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header class="header">
+            <h1 class="page-title">System Overview</h1>
+            <div class="header-actions">
+                <button class="icon-btn has-notification">
+                    <i data-lucide="bell"></i>
+                </button>
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <!-- Stats -->
+            <div class="dashboard-stats">
+                <div class="card">
+                    <div class="card-title">TOTAL ASSETS</div>
+                    <div class="stat-value">1,248</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">NEEDS MAINTENANCE</div>
+                    <div class="stat-value">14</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">NEW THIS MONTH</div>
+                    <div class="stat-value">+42</div>
+                </div>
+            </div>
+
+            <!-- Charts & Activities -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-title" style="color: var(--text-main); font-size: 16px; font-weight: 600; text-transform: none;">Assets by Branch</div>
+                    <div class="chart-container">
+                        <canvas id="assetsChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title" style="color: var(--text-main); font-size: 16px; font-weight: 600; text-transform: none;">Recent Activities</div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot dot-green"></div>
+                            <div class="timeline-content">
+                                <h4>Added 5 new Laptops</h4>
+                                <p>By Admin • 2 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot dot-yellow"></div>
+                            <div class="timeline-content">
+                                <h4>Projector #102 sent for repair</h4>
+                                <p>By Teacher John • 5 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot dot-blue"></div>
+                            <div class="timeline-content">
+                                <h4>Quarterly report generated</h4>
+                                <p>By Manager • 1 day ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Initialize Chart.js
+        const ctx = document.getElementById('assetsChart').getContext('2d');
+        const assetsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Center 1', 'Center 2', 'Center 3', 'Center 4'],
+                datasets: [{
+                    label: 'Assets',
+                    data: [350, 250, 150, 200],
+                    backgroundColor: [
+                        '#5c4dff',
+                        '#818cf8',
+                        '#a5b4fc',
+                        '#c7d2fe'
+                    ],
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barPercentage: 0.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1f2937',
+                        padding: 12,
+                        titleFont: { family: 'Inter', size: 13 },
+                        bodyFont: { family: 'Inter', size: 14, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [4, 4], color: '#e5e7eb', drawBorder: false },
+                        ticks: { font: { family: 'Inter' }, color: '#6b7280' }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: { family: 'Inter', weight: 500 }, color: '#6b7280' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

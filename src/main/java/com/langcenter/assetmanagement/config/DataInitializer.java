@@ -22,16 +22,16 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         if (roleRepository.count() == 0) {
-            roleRepository.save(Role.builder().roleName("ADMIN").build());
-            roleRepository.save(Role.builder().roleName("MANAGER").build());
-            roleRepository.save(Role.builder().roleName("TEACHER").build());
-            roleRepository.save(Role.builder().roleName("STAFF").build());
+            roleRepository.save(Role.builder().name("ADMIN").build());
+            roleRepository.save(Role.builder().name("MANAGER").build());
+            roleRepository.save(Role.builder().name("TEACHER").build());
+            roleRepository.save(Role.builder().name("STAFF").build());
         }
 
         if (userRepository.count() == 0) {
-            Role adminRole = roleRepository.findByRoleName("ADMIN").orElseThrow();
-            Role managerRole = roleRepository.findByRoleName("MANAGER").orElseThrow();
-            Role teacherRole = roleRepository.findByRoleName("TEACHER").orElseThrow();
+            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
+            Role managerRole = roleRepository.findByName("MANAGER").orElseThrow();
+            Role teacherRole = roleRepository.findByName("TEACHER").orElseThrow();
 
             userRepository.save(User.builder()
                     .username("admin")

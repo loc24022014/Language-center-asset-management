@@ -1,0 +1,27 @@
+# Maven build output
+target/
+*.class
+*.jar
+*.war
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Local JDK / Tools downloaded by IDE
+.tools/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Application local config (do NOT commit real passwords)
+# src/main/resources/application.properties

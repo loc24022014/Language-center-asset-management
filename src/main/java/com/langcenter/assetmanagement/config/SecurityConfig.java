@@ -37,6 +37,8 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
+                // Allow static resources (Frontend)
+                .requestMatchers("/*.html", "/css/**", "/js/**", "/img/**").permitAll()
                 // Admin only
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
                 // Authenticated

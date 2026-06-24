@@ -16,6 +16,16 @@ Hệ thống đáp ứng tối thiểu 04 chức năng nghiệp vụ chính theo
 - **Database:** Microsoft SQL Server.
 - **Build Tool:** Apache Maven.
 
+## 👥 Thành viên Nhóm
+
+| STT | Họ tên | Vai trò                 |
+| --- | ------ | ----------------------- |
+| 1   | ...    | Backend Developer & DBA |
+| 2   | ...    | Scrum Master & QA       |
+| 3   | ...    | Product Owner & BA      |
+| 4   | ...    | UI/UX & Frontend        |
+| 5   | ...    | DevOps & Documentation  |
+
 ---
 
 ## ⚙️ Hướng dẫn Cài đặt & Chạy Dự án (Installation Guide)

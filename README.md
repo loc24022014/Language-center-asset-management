@@ -18,13 +18,12 @@ Hệ thống đáp ứng tối thiểu 04 chức năng nghiệp vụ chính theo
 
 ## 👥 Thành viên Nhóm
 
-| STT | Họ tên | Vai trò                 |
-| --- | ------ | ----------------------- |
-| 1   | ...    | Backend Developer & DBA |
-| 2   | ...    | Scrum Master & QA       |
-| 3   | ...    | Product Owner & BA      |
-| 4   | ...    | UI/UX & Frontend        |
-| 5   | ...    | DevOps & Documentation  |
+| STT | Họ tên                | MSSV          | Vai trò                 |
+| 1   | Nguyễn Thành Lợi      | 2380601289    | Backend Developer & DBA |
+| 2   | Trương Vũ Anh Kiệt    | 2380601167    | Scrum Master & QA       |
+| 3   | Hồ Ngọc Phú           | 2380601699    | Product Owner & BA      |
+| 4   | Nguyễn Hiền Phước Lộc | 2380601273    | UI/UX & Frontend        |
+| 5   | Phạm Đinh Gia Bảo     | 2380600166    | DevOps & Documentation  |
 
 ---
 

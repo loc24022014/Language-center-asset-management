@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assets - EduAsset</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .toolbar-left {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .action-btn.delete:hover {
+            background-color: var(--status-broken-bg);
+            color: var(--status-broken-text);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"></div>
+            EduAsset
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html">
+                    <i data-lucide="home" class="nav-icon"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="assets.html">
+                    <i data-lucide="box" class="nav-icon"></i>
+                    Assets
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="transactions.html">
+                    <i data-lucide="arrow-left-right" class="nav-icon"></i>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item require-admin">
+                <a href="roles.html">
+                    <i data-lucide="users" class="nav-icon"></i>
+                    Roles & Permissions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="reports.html">
+                    <i data-lucide="bar-chart-2" class="nav-icon"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-wrapper">
+        <header class="header">
+            <h1 class="page-title">Asset Management</h1>
+            <div class="header-actions">
+                <button class="icon-btn has-notification">
+                    <i data-lucide="bell"></i>
+                </button>
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="input-group" style="flex: 2;">
+                        <i data-lucide="search" class="input-icon" style="width: 18px;"></i>
+                        <input type="text" class="form-control" placeholder="Search assets...">
+                    </div>
+                    <select class="form-control" style="flex: 1;">
+                        <option>All Categories</option>
+                        <option>Electronics</option>
+                        <option>Furniture</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="addAssetBtn">
+                    <i data-lucide="plus" style="width: 18px;"></i>
+                    Add New Asset
+                </button>
+            </div>
+
+            <div class="card" style="padding: 0;">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ASSET ID</th>
+                                <th>NAME</th>
+                                <th>CATEGORY</th>
+                                <th>STATUS</th>
+                                <th>LOCATION</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetsTableBody">
+                            <!-- Dynamic rows will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Add/Edit Asset -->
+    <div class="modal-overlay" id="assetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Asset</h2>
+                <button class="modal-close" id="closeModalBtn">
+                    <i data-lucide="x" style="width: 20px;"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Asset Code *</label>
+                        <input type="text" id="assetCode" class="form-control" placeholder="AST-1001" required>
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 2;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Asset Name *</label>
+                        <input type="text" id="assetName" class="form-control" placeholder="e.g. MacBook Pro M2" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Category</label>
+                        <select id="assetCategory" class="form-control">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Furniture">Furniture</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Quantity *</label>
+                        <input type="number" id="assetQty" class="form-control" value="1" min="1" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 16px;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Status</label>
+                        <select id="assetStatus" class="form-control">
+                            <option value="ACTIVE">Active</option>
+                            <option value="MAINTENANCE">Maintenance</option>
+                            <option value="BROKEN">Broken</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <label style="font-size: 13px; font-weight: 500; color: var(--text-muted);">Location</label>
+                        <input type="text" id="assetLocation" class="form-control" placeholder="e.g. Room 101">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveAssetBtn">Save Asset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+            toast.innerHTML = `<i data-lucide="${icon}" style="width: 18px; color: ${type === 'success' ? '#10b981' : '#ef4444'}"></i> ${message}`;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+            
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        // Global state
+        let currentAssets = [];
+        let currentEditId = null;
+
+        // Fetch and Render Assets
+        async function loadAssets() {
+            try {
+                const res = await ApiClient.fetch('/assets');
+                if (!res) return; // Redirected to login
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    showToast(err.message || 'Failed to load assets', 'error');
+                    return;
+                }
+                const assets = await res.json();
+                currentAssets = assets;
+                renderTable(assets);
+            } catch (err) {
+                console.error(err);
+                showToast(err.message || 'Failed to load assets', 'error');
+            }
+        }
+
+        function renderTable(assets) {
+            const tbody = document.getElementById('assetsTableBody');
+            tbody.innerHTML = '';
+            
+            assets.forEach(asset => {
+                let badgeCat = asset.category === 'Electronics' ? 'badge-electronics' : 'badge-furniture';
+                let badgeStatus = 'badge-active';
+                if(asset.status === 'Maintenance') badgeStatus = 'badge-maintenance';
+                if(asset.status === 'Broken') badgeStatus = 'badge-broken';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 600;">#${asset.assetCode || asset.id}</td>
+                    <td>${asset.name}</td>
+                    <td><span class="badge ${badgeCat}">${asset.category || 'N/A'}</span></td>
+                    <td><span class="badge ${badgeStatus}">${asset.status || 'Active'}</span></td>
+                    <td>${asset.location || '-'}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="action-btn" onclick="openEditModal(${asset.id})"><i data-lucide="edit-2" style="width: 18px;"></i></button>
+                            <button class="action-btn delete require-admin" onclick="deleteAsset(${asset.id})"><i data-lucide="trash-2" style="width: 18px;"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        async function deleteAsset(id) {
+            if(confirm('Are you sure you want to delete this asset?')) {
+                try {
+                    await ApiClient.fetch(`/assets/${id}`, { method: 'DELETE' });
+                    showToast('Asset deleted', 'success');
+                    loadAssets();
+                } catch(e) {
+                    showToast('Failed to delete asset', 'error');
+                }
+            }
+        }
+
+        // Initial Load
+        loadAssets();
+
+        // Modal Logic
+        const modal = document.getElementById('assetModal');
+        const addBtn = document.getElementById('addAssetBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelModalBtn');
+        const saveBtn = document.getElementById('saveAssetBtn');
+
+        function openModal() { 
+            currentEditId = null;
+            document.querySelector('.modal-title').textContent = 'Add New Asset';
+            saveBtn.innerHTML = 'Save Asset';
+            
+            document.getElementById('assetCode').value = '';
+            document.getElementById('assetName').value = '';
+            document.getElementById('assetQty').value = '1';
+            document.getElementById('assetLocation').value = '';
+            document.getElementById('assetCategory').value = 'Electronics';
+            document.getElementById('assetStatus').value = 'ACTIVE';
+
+            modal.classList.add('active'); 
+        }
+
+        function openEditModal(id) {
+            const asset = currentAssets.find(a => a.id === id);
+            if(!asset) return;
+            
+            currentEditId = id;
+            document.querySelector('.modal-title').textContent = 'Edit Asset';
+            saveBtn.innerHTML = 'Update Asset';
+
+            document.getElementById('assetCode').value = asset.assetCode;
+            document.getElementById('assetName').value = asset.name;
+            document.getElementById('assetQty').value = asset.totalQuantity || asset.availableQuantity || 1;
+            document.getElementById('assetLocation').value = asset.location || '';
+            document.getElementById('assetCategory').value = asset.category || 'Electronics';
+            
+            // Map status
+            let statusVal = 'ACTIVE';
+            if (asset.status === 'Maintenance' || asset.status === 'MAINTENANCE') statusVal = 'MAINTENANCE';
+            if (asset.status === 'Broken' || asset.status === 'BROKEN') statusVal = 'BROKEN';
+            document.getElementById('assetStatus').value = statusVal;
+
+            modal.classList.add('active'); 
+        }
+
+        function closeModal() { modal.classList.remove('active'); }
+
+        addBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Save Asset
+        saveBtn.addEventListener('click', async () => {
+            const data = {
+                assetCode: document.getElementById('assetCode').value,
+                name: document.getElementById('assetName').value,
+                category: document.getElementById('assetCategory').value,
+                totalQuantity: parseInt(document.getElementById('assetQty').value),
+                status: document.getElementById('assetStatus').value,
+                location: document.getElementById('assetLocation').value
+            };
+
+            if(!data.assetCode || !data.name || !data.totalQuantity) {
+                showToast('Please fill all required fields', 'error');
+                return;
+            }
+
+            try {
+                saveBtn.innerHTML = 'Saving...';
+                saveBtn.disabled = true;
+
+                const method = currentEditId ? 'PUT' : 'POST';
+                const endpoint = currentEditId ? `/assets/${currentEditId}` : '/assets';
+
+                const res = await ApiClient.fetch(endpoint, {
+                    method: method,
+                    body: JSON.stringify(data)
+                });
+
+                if(res.ok) {
+                    showToast(currentEditId ? 'Asset updated successfully!' : 'New asset added successfully!', 'success');
+                    closeModal();
+                    // clear form
+                    document.getElementById('assetCode').value = '';
+                    document.getElementById('assetName').value = '';
+                    document.getElementById('assetLocation').value = '';
+                    
+                    loadAssets(); // reload table
+                } else {
+                    let errMsg = 'Error saving asset';
+                    try {
+                        const errData = await res.json();
+                        errMsg = errData.message || errData.error || JSON.stringify(errData);
+                    } catch(e) {}
+                    showToast(errMsg, 'error');
+                }
+            } catch(e) {
+                showToast('Error saving asset', 'error');
+            } finally {
+                saveBtn.innerHTML = currentEditId ? 'Update Asset' : 'Save Asset';
+                saveBtn.disabled = false;
+            }
+        });
+
+        // Close when clicking outside modal content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    </script>
+</body>
+</html>

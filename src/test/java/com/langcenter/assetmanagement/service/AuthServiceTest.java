@@ -46,7 +46,7 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        mockRole = Role.builder().roleName("ADMIN").build();
+        mockRole = Role.builder().name("ADMIN").build();
         mockUser = User.builder()
                 .username("admin")
                 .password("encodedPassword")
@@ -65,13 +65,13 @@ public class AuthServiceTest {
         Authentication authentication = mock(Authentication.class);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
-        when(tokenProvider.generateToken(authentication)).thenReturn("mockJwtToken");
+        when(tokenProvider.generateToken("admin", "ADMIN")).thenReturn("mockJwtToken");
         when(userRepository.findByUsername("admin")).thenReturn(Optional.of(mockUser));
 
         LoginResponse response = userService.login(request);
 
         assertNotNull(response);
-        assertEquals("mockJwtToken", response.getToken());
+        assertEquals("mockJwtToken", response.getAccessToken());
         assertEquals("admin", response.getUsername());
         assertEquals("ADMIN", response.getRole());
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));

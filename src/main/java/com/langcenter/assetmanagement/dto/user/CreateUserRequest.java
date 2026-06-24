@@ -22,6 +22,6 @@ public class CreateUserRequest {
 
     private String phone;
 
-    @NotNull(message = "Role ID không được để trống")
-    private Integer roleId;
+    @NotBlank(message = "Role Name không được để trống")
+    private String roleName;
 }
